@@ -34,7 +34,7 @@
  *
  *********************************************************************/
 
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_conversion.h"
+#include "../../include/amtec_conversion.h"
 
 int ParamBytes(int type)
 {

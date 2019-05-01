@@ -76,8 +76,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
-   DEPENDENCIES
-   sensor_msgs   std_msgs
+   DEPENDENCIES sensor_msgs std_msgs
  )
 
 ###################################
@@ -93,7 +92,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES amtec
   CATKIN_DEPENDS roscpp sensor_msgs std_msgs genmsg tf
-  DEPENDS system_lib
+#  DEPENDS system_lib
 )
 
 ###########
@@ -109,20 +108,25 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(amtec
-#   src/${PROJECT_NAME}/amtec.cpp
-# )
-
-## Declare a cpp executable
-# add_executable(amtec_node src/amtec_node.cpp)
- add_executable(amtec_node
-	src/amtec_node/amtec_node.cpp 
+add_library(amtec
+	src/amtec_node/amtec_node.cpp
 	src/libamtec/amtec_base.c
 	src/libamtec/amtec_commands.c
 	src/libamtec/amtec_conversion.c
 	src/libamtec/amtec_io.c
 	src/libamtec/amtec_settings.c
-  )
+)
+
+## Declare a cpp executable
+# add_executable(amtec_node src/amtec_node.cpp)
+ # add_executable(amtec
+	# src/amtec_node/amtec_node.cpp
+	# src/libamtec/amtec_base.c
+	# src/libamtec/amtec_commands.c
+	# src/libamtec/amtec_conversion.c
+	# src/libamtec/amtec_io.c
+	# src/libamtec/amtec_settings.c
+ #  )
 
 
 ## Add cmake target dependencies of the executable/library
@@ -130,10 +134,10 @@ include_directories(
 # add_dependencies(amtec_node amtec_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(amtec_node
+ target_link_libraries(amtec
    ${catkin_LIBRARIES}
 #   ${Boost_INCLUDE_DIR} #Arain: Not sure which one is correct!
-   ${Boost_INCLUDE_DIR}  #Arain: Not sure 
+   ${Boost_INCLUDE_DIR}  #Arain: Not sure
  )
 
 #############
@@ -151,18 +155,18 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS amtec amtec_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS amtec
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

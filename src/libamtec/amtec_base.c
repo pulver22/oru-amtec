@@ -34,7 +34,7 @@
  *
  *********************************************************************/
 
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_base.h"
+#include "../../include/amtec_base.h"
 
 ///Conversion factor for degrees to radians
 #define D2R       0.0174532925199432957692

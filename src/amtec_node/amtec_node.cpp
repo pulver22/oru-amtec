@@ -40,10 +40,10 @@
 
 #include <tf/transform_broadcaster.h>
 
-#include </home/pulver/catkin_ws2/src/amtec/include/amtec_base.h>
-#include </home/pulver/catkin_ws2/src/amtec/include/amtec_commands.h>
-#include </home/pulver/catkin_ws2/src/amtec/include/amtec_settings.h>
-#include </home/pulver/catkin_ws2/src/amtec/include/amtec_io.h>
+#include "../../include/amtec_base.h"
+#include "../../include/amtec_commands.h"
+#include "../../include/amtec_settings.h"
+#include "../../include/amtec_io.h"
 
 // messages
 #include <amtec/AmtecState.h>

@@ -33,7 +33,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *
  *********************************************************************/
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -47,7 +47,7 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <linux/serial.h>
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_io.h"
+#include "../../include/amtec_io.h"
 
 
 //#define IO_DEBUG

@@ -33,12 +33,12 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *
  *********************************************************************/
- 
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_base.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_io.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_commands.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_conversion.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_settings.h"
+
+#include "../../include/amtec_base.h"
+#include "../../include/amtec_io.h"
+#include "../../include/amtec_commands.h"
+#include "../../include/amtec_conversion.h"
+#include "../../include/amtec_settings.h"
 
 void AMTEC_set_settings(amtec_powercube_device_p dev, amtec_powercube_setting_p settings, amtec_powercube_params_p params)
 {
@@ -163,8 +163,3 @@ void PRINT_CubeState(unsigned long state)
     fprintf(stderr, "  %s", (v>>i & 1)==1?"+":"-");
   fprintf(stderr, "\r");
 }
-
-
-
-
-

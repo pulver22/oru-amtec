@@ -33,10 +33,10 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *
  *********************************************************************/
- 
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_io.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_conversion.h"
-#include "/home/pulver/catkin_ws2/src/amtec/include/amtec_commands.h"
+
+#include "../../include/amtec_io.h"
+#include "../../include/amtec_conversion.h"
+#include "../../include/amtec_commands.h"
 
 /**********************************************************/
 /*               POWERCUBE COMMANDS */
