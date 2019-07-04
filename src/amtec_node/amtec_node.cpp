@@ -42,12 +42,12 @@
 
 #include "../../include/amtec_base.h"
 #include "../../include/amtec_commands.h"
-#include "../../include/amtec_settings.h"
 #include "../../include/amtec_io.h"
+#include "../../include/amtec_settings.h"
 
 // messages
-#include <amtec/AmtecState.h>
 #include "sensor_msgs/JointState.h"
+#include <amtec/AmtecState.h>
 
 // services
 #include <amtec/GetStatus.h>
@@ -56,16 +56,15 @@
 #include <amtec/Reset.h>
 #include <amtec/SetPosition.h>
 #include <amtec/SetVelocity.h>
-#include <amtec/TargetAcceleration.h>
-#include <amtec/TargetVelocity.h>
 #include <amtec/SweepPan.h>
 #include <amtec/SweepTilt.h>
+#include <amtec/TargetAcceleration.h>
+#include <amtec/TargetVelocity.h>
 
-class AmtecNode
-{
+class AmtecNode {
 public:
   ros::NodeHandle node_;
-  boost::mutex amtec_mutex_ ;
+  boost::mutex amtec_mutex_;
   amtec_powercube_p amtec_;
   amtec::AmtecState amtec_pan_state_message_;
   amtec::AmtecState amtec_tilt_state_message_;
@@ -74,7 +73,6 @@ public:
   ros::Publisher tilt_state_pub_;
 
   ros::Publisher joint_state_pub_;
-
 
   ros::ServiceServer get_status_srv_;
   ros::ServiceServer halt_srv_;
@@ -96,8 +94,7 @@ public:
   std::string tilt_joint;
 
   // parameter
-  AmtecNode() : node_(), amtec_(NULL), tf_()
-  {
+  AmtecNode() : node_(), amtec_(NULL), tf_() {
     std::string device, parity;
 
     // initialize amtec
@@ -111,8 +108,8 @@ public:
     private_nh.param("parent_frame", parent_frame_, std::string("head_link"));
     private_nh.param("amtec_frame", amtec_frame_, std::string("amtec_link"));
 
-    private_nh.param("pan_joint",pan_joint, std::string("ptu_pan_joint"));
-    private_nh.param("tilt_joint",tilt_joint, std::string("ptu_tilt_joint"));
+    private_nh.param("pan_joint", pan_joint, std::string("ptu_pan_joint"));
+    private_nh.param("tilt_joint", tilt_joint, std::string("ptu_tilt_joint"));
 
     private_nh.param("port", device, std::string("/dev/ttyUSB2"));
     private_nh.param("baud_rate", amtec_->dev.baud, 38400);
@@ -168,21 +165,23 @@ public:
     }
 
     ROS_INFO("Resetting device");
-    if(!amtecReset(&amtec_->dev, amtec_->pan.id)) {
+    if (!amtecReset(&amtec_->dev, amtec_->pan.id)) {
       ROS_FATAL("Unable to connect to pan module");
       private_nh.shutdown();
       return;
     }
-    if(!amtecReset(&amtec_->dev, amtec_->tilt.id)) {
+    if (!amtecReset(&amtec_->dev, amtec_->tilt.id)) {
       ROS_FATAL("Unable to connect tilt module");
       private_nh.shutdown();
       return;
     }
 
     ROS_INFO("Retrieving module state");
-    unsigned int pan_serial = amtecGetDefCubeSerial(&amtec_->dev, amtec_->pan.id);
+    unsigned int pan_serial =
+        amtecGetDefCubeSerial(&amtec_->dev, amtec_->pan.id);
     unsigned int pan_state = amtecGetCubeState(&amtec_->dev, amtec_->pan.id);
-    unsigned int tilt_serial = amtecGetDefCubeSerial(&amtec_->dev, amtec_->tilt.id);
+    unsigned int tilt_serial =
+        amtecGetDefCubeSerial(&amtec_->dev, amtec_->tilt.id);
     unsigned int tilt_state = amtecGetCubeState(&amtec_->dev, amtec_->pan.id);
 
     std::cout << "pan serial " << pan_serial << std::endl;
@@ -210,59 +209,88 @@ public:
     tilt_state_pub_ = private_nh.advertise<amtec::AmtecState>("tilt_state", 1);
     tilt_state_pub_ = private_nh.advertise<amtec::AmtecState>("tilt_state", 1);
 
-    joint_state_pub_ = private_nh.advertise<sensor_msgs::JointState>("joint_states", 1);
-
+    joint_state_pub_ =
+        private_nh.advertise<sensor_msgs::JointState>("joint_states", 1);
 
     // ***** Start Services *****
-    get_status_srv_ = private_nh.advertiseService("get_status", &AmtecNode::getStatus, this);
+    get_status_srv_ =
+        private_nh.advertiseService("get_status", &AmtecNode::getStatus, this);
     halt_srv_ = private_nh.advertiseService("halt", &AmtecNode::halt, this);
     home_srv_ = private_nh.advertiseService("home", &AmtecNode::home, this);
     reset_srv_ = private_nh.advertiseService("reset", &AmtecNode::reset, this);
-    set_position_srv_ = private_nh.advertiseService("set_position", &AmtecNode::setPosition, this);
-    set_velocity_srv_ = private_nh.advertiseService("set_velocity", &AmtecNode::setVelocity, this);
-    target_accel_srv_ = private_nh.advertiseService("target_acceleration", &AmtecNode::targetAcceleration, this);
-    target_vel_srv_ = private_nh.advertiseService("target_velocity", &AmtecNode::targetVelocity, this);
-    sweep_pan_srv_ = private_nh.advertiseService("sweep_pan", &AmtecNode::sweepPan, this);
-    sweep_tilt_srv_ = private_nh.advertiseService("sweep_tilt", &AmtecNode::sweepTilt, this);
+    set_position_srv_ = private_nh.advertiseService(
+        "set_position", &AmtecNode::setPosition, this);
+    set_velocity_srv_ = private_nh.advertiseService(
+        "set_velocity", &AmtecNode::setVelocity, this);
+    target_accel_srv_ = private_nh.advertiseService(
+        "target_acceleration", &AmtecNode::targetAcceleration, this);
+    target_vel_srv_ = private_nh.advertiseService(
+        "target_velocity", &AmtecNode::targetVelocity, this);
+    sweep_pan_srv_ =
+        private_nh.advertiseService("sweep_pan", &AmtecNode::sweepPan, this);
+    sweep_tilt_srv_ =
+        private_nh.advertiseService("sweep_tilt", &AmtecNode::sweepTilt, this);
     ROS_INFO("Amtec is ready!");
   }
 
-  virtual ~AmtecNode()
-  {
+  virtual ~AmtecNode() {
     // shutdown amtec
     amtecClear(amtec_);
   }
 
-  void printModuleState(unsigned int state)
-  {
-    if(state&STATE_HOME_OK) std::cout << "STATE_HOME_OK" << std::endl;
-    if(state&STATE_HALTED) std::cout << "STATE_HALTED" << std::endl;
-    if(state&STATE_SWR) std::cout << "STATE_SWR" << std::endl;
-    if(state&STATE_SW1) std::cout << "STATE_SW1" << std::endl;
-    if(state&STATE_SW2) std::cout << "STATE_SW2" << std::endl;
-    if(state&STATE_BRAKEACTIVE) std::cout << "STATE_BRAKEACTIVE" << std::endl;
-    if(state&STATE_CURLIMIT) std::cout << "STATE_CURLIMIT" << std::endl;
-    if(state&STATE_MOTION) std::cout << "STATE_MOTION" << std::endl;
-    if(state&STATE_RAMP_ACC) std::cout << "STATE_RAMP_ACC" << std::endl;
-    if(state&STATE_RAMP_STEADY) std::cout << "STATE_RAMP_STEADY" << std::endl;
-    if(state&STATE_RAMP_DEC) std::cout << "STATE_RAMP_DEC" << std::endl;
-    if(state&STATE_RAMP_END) std::cout << "STATE_RAMP_END" << std::endl;
-    if(state&STATE_INPROGRESS) std::cout << "STATE_INPROGRESS" << std::endl;
-    if(state&STATE_FULLBUFFER) std::cout << "STATE_FULLBUFFER" << std::endl;
-    if(state&STATE_ERROR) std::cout << "STATE_ERROR" << std::endl;
-    if(state&STATE_POWERFAULT) std::cout << "STATE_POWERFAULT" << std::endl;
-    if(state&STATE_TOW_ERROR) std::cout << "STATE_TOW_ERROR" << std::endl;
-    if(state&STATE_COMM_ERROR) std::cout << "STATE_COMM_ERROR" << std::endl;
-    if(state&STATE_POW_VOLT_ERR) std::cout << "STATE_POW_VOLT_ERR" << std::endl;
-    if(state&STATE_POW_FET_TEMP) std::cout << "STATE_POW_FET_TEMP" << std::endl;
-    if(state&STATE_POW_INTEGRALERR) std::cout << "STATE_POW_INTEGRALERR" << std::endl;
-    if(state&STATE_BEYOND_HARD) std::cout << "STATE_BEYOND_HARD" << std::endl;
-    if(state&STATE_BEYOND_SOFT) std::cout << "STATE_BEYOND_SOFT" << std::endl;
-    if(state&STATE_LOGIC_VOLT) std::cout << "STATE_LOGIC_VOLT" << std::endl;
+  void printModuleState(unsigned int state) {
+    if (state & STATE_HOME_OK)
+      std::cout << "STATE_HOME_OK" << std::endl;
+    if (state & STATE_HALTED)
+      std::cout << "STATE_HALTED" << std::endl;
+    if (state & STATE_SWR)
+      std::cout << "STATE_SWR" << std::endl;
+    if (state & STATE_SW1)
+      std::cout << "STATE_SW1" << std::endl;
+    if (state & STATE_SW2)
+      std::cout << "STATE_SW2" << std::endl;
+    if (state & STATE_BRAKEACTIVE)
+      std::cout << "STATE_BRAKEACTIVE" << std::endl;
+    if (state & STATE_CURLIMIT)
+      std::cout << "STATE_CURLIMIT" << std::endl;
+    if (state & STATE_MOTION)
+      std::cout << "STATE_MOTION" << std::endl;
+    if (state & STATE_RAMP_ACC)
+      std::cout << "STATE_RAMP_ACC" << std::endl;
+    if (state & STATE_RAMP_STEADY)
+      std::cout << "STATE_RAMP_STEADY" << std::endl;
+    if (state & STATE_RAMP_DEC)
+      std::cout << "STATE_RAMP_DEC" << std::endl;
+    if (state & STATE_RAMP_END)
+      std::cout << "STATE_RAMP_END" << std::endl;
+    if (state & STATE_INPROGRESS)
+      std::cout << "STATE_INPROGRESS" << std::endl;
+    if (state & STATE_FULLBUFFER)
+      std::cout << "STATE_FULLBUFFER" << std::endl;
+    if (state & STATE_ERROR)
+      std::cout << "STATE_ERROR" << std::endl;
+    if (state & STATE_POWERFAULT)
+      std::cout << "STATE_POWERFAULT" << std::endl;
+    if (state & STATE_TOW_ERROR)
+      std::cout << "STATE_TOW_ERROR" << std::endl;
+    if (state & STATE_COMM_ERROR)
+      std::cout << "STATE_COMM_ERROR" << std::endl;
+    if (state & STATE_POW_VOLT_ERR)
+      std::cout << "STATE_POW_VOLT_ERR" << std::endl;
+    if (state & STATE_POW_FET_TEMP)
+      std::cout << "STATE_POW_FET_TEMP" << std::endl;
+    if (state & STATE_POW_INTEGRALERR)
+      std::cout << "STATE_POW_INTEGRALERR" << std::endl;
+    if (state & STATE_BEYOND_HARD)
+      std::cout << "STATE_BEYOND_HARD" << std::endl;
+    if (state & STATE_BEYOND_SOFT)
+      std::cout << "STATE_BEYOND_SOFT" << std::endl;
+    if (state & STATE_LOGIC_VOLT)
+      std::cout << "STATE_LOGIC_VOLT" << std::endl;
   }
 
-  bool getStatus(amtec::GetStatus::Request& req, amtec::GetStatus::Response& resp)
-  {
+  bool getStatus(amtec::GetStatus::Request &req,
+                 amtec::GetStatus::Response &resp) {
     amtec_mutex_.lock();
     resp.position_pan = -amtecGetActPos(&amtec_->dev, amtec_->pan.id);
     resp.position_tilt = amtecGetActPos(&amtec_->dev, amtec_->tilt.id);
@@ -272,8 +300,7 @@ public:
     return true;
   }
 
-  bool halt(amtec::Halt::Request& req, amtec::Halt::Response& resp)
-  {
+  bool halt(amtec::Halt::Request &req, amtec::Halt::Response &resp) {
     bool ret = true;
     amtec_mutex_.lock();
     ret = ret && amtecHalt(&amtec_->dev, amtec_->pan.id);
@@ -282,8 +309,7 @@ public:
     return ret;
   }
 
-  bool home(amtec::Home::Request& req, amtec::Home::Response& resp)
-  {
+  bool home(amtec::Home::Request &req, amtec::Home::Response &resp) {
     bool ret;
     amtec_mutex_.lock();
     ret = amtecHome(&amtec_->dev, amtec_->pan.id);
@@ -292,8 +318,7 @@ public:
     return ret;
   }
 
-  bool reset(amtec::Reset::Request& req, amtec::Reset::Response& resp)
-  {
+  bool reset(amtec::Reset::Request &req, amtec::Reset::Response &resp) {
     bool ret;
     amtec_mutex_.lock();
     ret = amtecReset(&amtec_->dev, amtec_->pan.id);
@@ -302,40 +327,46 @@ public:
     return ret;
   }
 
-  bool setPosition(amtec::SetPosition::Request& req, amtec::SetPosition::Response& resp)
-  {
+  bool setPosition(amtec::SetPosition::Request &req,
+                   amtec::SetPosition::Response &resp) {
     bool ret = true;
     amtec_mutex_.lock();
-    float factor = 1;//(req.position_tilt > 0) ? 1: -1;
-    amtecSetTargetVel(&amtec_->dev, amtec_->tilt.id, factor*amtec_->tiltset.MaxVel);
+    float factor = 1; //(req.position_tilt > 0) ? 1: -1;
+    amtecSetTargetVel(&amtec_->dev, amtec_->tilt.id,
+                      factor * amtec_->tiltset.MaxVel);
     usleep(100);
-    amtecSetTargetAcc(&amtec_->dev, amtec_->tilt.id, factor*amtec_->tiltset.MaxAcc);
+    amtecSetTargetAcc(&amtec_->dev, amtec_->tilt.id,
+                      factor * amtec_->tiltset.MaxAcc);
     usleep(200);
-    std::cout<<"processing position request. speed "<<factor*amtec_->tiltset.MaxVel
-	     <<" acc "<<factor*amtec_->tiltset.MaxAcc<<" target "<<req.position_tilt<<std::endl;
+    std::cout << "processing position request. speed "
+              << factor * amtec_->tiltset.MaxVel << " acc "
+              << factor * amtec_->tiltset.MaxAcc << " target "
+              << req.position_tilt << std::endl;
 
     ret = amtecMotionFRamp(&amtec_->dev, amtec_->pan.id, -req.position_pan);
 
     // to avoid gratuitous locking if already at requested tilt position
     if (fabs(req.position_tilt - amtec_tilt_state_message_.position) > 0.001)
-      ret = ret && amtecMotionFRamp(&amtec_->dev, amtec_->tilt.id, req.position_tilt);
+      ret = ret &&
+            amtecMotionFRamp(&amtec_->dev, amtec_->tilt.id, req.position_tilt);
 
     amtec_mutex_.unlock();
     return ret;
   }
 
-  bool setVelocity(amtec::SetVelocity::Request& req, amtec::SetVelocity::Response& resp)
-  {
+  bool setVelocity(amtec::SetVelocity::Request &req,
+                   amtec::SetVelocity::Response &resp) {
     bool ret;
     amtec_mutex_.lock();
     ret = amtecMotionFVel(&amtec_->dev, amtec_->pan.id, -req.velocity_pan);
-    ret = ret && amtecMotionFVel(&amtec_->dev, amtec_->tilt.id, req.velocity_tilt);
+    ret = ret &&
+          amtecMotionFVel(&amtec_->dev, amtec_->tilt.id, req.velocity_tilt);
     amtec_mutex_.unlock();
     return ret;
   }
 
-  bool targetAcceleration(amtec::TargetAcceleration::Request& req, amtec::TargetAcceleration::Response& resp)
-  {
+  bool targetAcceleration(amtec::TargetAcceleration::Request &req,
+                          amtec::TargetAcceleration::Response &resp) {
     bool ret = true;
     amtec_mutex_.lock();
     amtecSetTargetAcc(&amtec_->dev, amtec_->pan.id, req.acceleration_pan);
@@ -344,8 +375,8 @@ public:
     return ret;
   }
 
-  bool targetVelocity(amtec::TargetVelocity::Request& req, amtec::TargetVelocity::Response& resp)
-  {
+  bool targetVelocity(amtec::TargetVelocity::Request &req,
+                      amtec::TargetVelocity::Response &resp) {
     bool ret = true;
     amtec_mutex_.lock();
     amtecSetTargetVel(&amtec_->dev, amtec_->pan.id, req.velocity_pan);
@@ -354,74 +385,81 @@ public:
     return ret;
   }
 
-  bool sweepPan(amtec::SweepPan::Request& req, amtec::SweepPan::Response& resp)
-  {
+  bool sweepPan(amtec::SweepPan::Request &req,
+                amtec::SweepPan::Response &resp) {
     bool ret;
     amtec_mutex_.lock();
-    ret = amtecMotionFCosLoop(&amtec_->dev, amtec_->pan.id, req.sweep_amplitude, req.sweep_period);
+    ret = amtecMotionFCosLoop(&amtec_->dev, amtec_->pan.id, req.sweep_amplitude,
+                              req.sweep_period);
     amtec_mutex_.unlock();
     return ret;
   }
 
-  bool sweepTilt(amtec::SweepTilt::Request& req, amtec::SweepTilt::Response& resp)
-  {
+  bool sweepTilt(amtec::SweepTilt::Request &req,
+                 amtec::SweepTilt::Response &resp) {
     bool ret;
     amtec_mutex_.lock();
-    ret = amtecMotionFCosLoop(&amtec_->dev, amtec_->tilt.id, req.sweep_amplitude, req.sweep_period);
+    ret = amtecMotionFCosLoop(&amtec_->dev, amtec_->tilt.id,
+                              req.sweep_amplitude, req.sweep_period);
     amtec_mutex_.unlock();
     return ret;
   }
 
-  bool spin()
-  {
+  bool spin() {
     ros::Rate r(100); // 10 ms or 100 Hz
-    while (node_.ok())
-    {
+    while (node_.ok()) {
       amtec_mutex_.lock();
-      amtec_pan_state_message_.state = amtecGetCubeState(&amtec_->dev, amtec_->pan.id);
-      amtec_pan_state_message_.position = -amtecGetActPos(&amtec_->dev, amtec_->pan.id);
-      amtec_pan_state_message_.velocity = -amtecGetActVel(&amtec_->dev, amtec_->pan.id);
-      amtec_tilt_state_message_.state = amtecGetCubeState(&amtec_->dev, amtec_->tilt.id);
-      amtec_tilt_state_message_.position = amtecGetActPos(&amtec_->dev, amtec_->tilt.id);
-      amtec_tilt_state_message_.velocity = amtecGetActVel(&amtec_->dev, amtec_->tilt.id);
-      //TODO(duhadway): check assumption that positions are given in radians
+      amtec_pan_state_message_.state =
+          amtecGetCubeState(&amtec_->dev, amtec_->pan.id);
+      amtec_pan_state_message_.position =
+          -amtecGetActPos(&amtec_->dev, amtec_->pan.id);
+      amtec_pan_state_message_.velocity =
+          -amtecGetActVel(&amtec_->dev, amtec_->pan.id);
+      amtec_tilt_state_message_.state =
+          amtecGetCubeState(&amtec_->dev, amtec_->tilt.id);
+      amtec_tilt_state_message_.position =
+          amtecGetActPos(&amtec_->dev, amtec_->tilt.id);
+      amtec_tilt_state_message_.velocity =
+          amtecGetActVel(&amtec_->dev, amtec_->tilt.id);
+      // TODO(duhadway): check assumption that positions are given in radians
       amtec_pan_state_message_.header.stamp = ros::Time::now();
       amtec_tilt_state_message_.header.stamp = ros::Time::now();
-      parent_to_amtec_.setRotation(tf::Quaternion( amtec_pan_state_message_.position, -amtec_tilt_state_message_.position, 0 ));
+      parent_to_amtec_.setRotation(
+          tf::Quaternion(amtec_pan_state_message_.position,
+                         -amtec_tilt_state_message_.position, 0));
       amtec_mutex_.unlock();
 
       pan_state_pub_.publish(amtec_pan_state_message_);
       tilt_state_pub_.publish(amtec_tilt_state_message_);
-      tf_.sendTransform( tf::StampedTransform(parent_to_amtec_, ros::Time::now(), parent_frame_, amtec_frame_));
-
+      tf_.sendTransform(tf::StampedTransform(parent_to_amtec_, ros::Time::now(),
+                                             parent_frame_, amtec_frame_));
 
       sensor_msgs::JointState joint_msg;
-
 
       joint_msg.header.stamp = ros::Time::now();
 
       std::vector<double, std::allocator<double> > position_joints;
       std::vector<std::string, std::allocator<std::string> > names_joints;
 
-
       std::vector<double>::iterator it_pos;
       it_pos = position_joints.begin();
-      position_joints.insert(it_pos,-amtecGetActPos(&amtec_->dev, amtec_->pan.id));
+      position_joints.insert(it_pos,
+                             -amtecGetActPos(&amtec_->dev, amtec_->pan.id));
       it_pos = position_joints.begin();
-      position_joints.insert(it_pos,-amtecGetActPos(&amtec_->dev, amtec_->tilt.id));
+      position_joints.insert(it_pos,
+                             -amtecGetActPos(&amtec_->dev, amtec_->tilt.id));
 
       std::vector<std::string>::iterator it_name;
       it_name = names_joints.begin();
-      names_joints.insert(it_name,pan_joint);
+      names_joints.insert(it_name, pan_joint);
 
       it_name = names_joints.begin();
-      names_joints.insert(it_name,tilt_joint);
+      names_joints.insert(it_name, tilt_joint);
 
-      joint_msg.position=position_joints;
-      joint_msg.name=names_joints;
+      joint_msg.position = position_joints;
+      joint_msg.name = names_joints;
 
       joint_state_pub_.publish(joint_msg);
-
 
       ros::spinOnce();
       r.sleep();
@@ -430,8 +468,7 @@ public:
   }
 };
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "amtec");
   AmtecNode a;
   a.spin();

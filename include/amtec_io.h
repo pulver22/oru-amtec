@@ -46,7 +46,8 @@ extern "C" {
 void amtecDeviceSetParams(amtec_powercube_device_p dev);
 void amtecDeviceSetBaudrate(amtec_powercube_device_p dev, int brate);
 int amtecDeviceConnectPort(amtec_powercube_device_p dev);
-int amtecSendCommand(amtec_powercube_device_p dev, int id, unsigned char *cmd, int len);
+int amtecSendCommand(amtec_powercube_device_p dev, int id, unsigned char *cmd,
+                     int len);
 int amtecGetAnswer(amtec_powercube_device_p dev, unsigned char *cmd, int *len);
 
 #ifdef __cplusplus

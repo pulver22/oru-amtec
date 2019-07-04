@@ -200,7 +200,7 @@ void amtecPrintParams(amtec_powercube_params_p params)
   // fprintf(stderr, "  TargetVel      = %4.3f\n", params->TargetVel);
   fprintf(stderr, "ActPos         = %4.3f\n", R2D*(params->ActPos));
   fprintf(stderr, "ActVel         = %4.3f\n", params->ActVel);
-  fprintf(stderr, "Break          = %d\n", (int) ((params->Config >> 3) & 1));
+  fprintf(stderr, "Break          = %d\n", (int) ((params->Config > > 3) & 1));
 
   fprintf(stderr, "ActC0          = %d\n", params->ActC0);
   fprintf(stderr, "ActDamp        = %d\n", params->ActDamp);

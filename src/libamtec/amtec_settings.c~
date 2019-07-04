@@ -141,7 +141,7 @@ void AMTEC_get_params(amtec_powercube_device_p dev, amtec_powercube_params_p par
   // params->TargetAcc      = amtecGetTargetAcc(dev, params->id);
   params->MaxCur         = amtecGetMaxCur(dev, params->id);
   params->Config         = amtecGetConfig(dev, params->id);
-  params->UseBreak       = (int)(((params->Config)>>3)&1);
+  params->UseBreak       = (int)(((params->Config)> >3)&1);
 
   params->ActC0          = amtecGetActC0(dev, params->id);
   params->ActDamp        = amtecGetActDamp(dev, params->id);
@@ -160,7 +160,7 @@ void PRINT_CubeState(unsigned long state)
   unsigned long v = state;
 
   for(i = 0; i < 32; i++)
-    fprintf(stderr, "  %s", (v>>i & 1)==1?"+":"-");
+    fprintf(stderr, "  %s", (v> >i & 1)==1?"+":"-");
   fprintf(stderr, "\r");
 }
 

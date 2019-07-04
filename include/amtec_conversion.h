@@ -43,25 +43,25 @@
 extern "C" {
 #endif
 
-int            ParamBytes(int type);
+int ParamBytes(int type);
 
 /* CONVERSION BYTES -> NUM */
-float          convertBytes2Float(unsigned char *bytes);
-char           convertBytes2Int8(unsigned char *bytes);
-short          convertBytes2Int16(unsigned char *bytes);
-int            convertBytes2Int32(unsigned char *bytes);
-unsigned char  convertBytes2UInt8(unsigned char *bytes);
+float convertBytes2Float(unsigned char *bytes);
+char convertBytes2Int8(unsigned char *bytes);
+short convertBytes2Int16(unsigned char *bytes);
+int convertBytes2Int32(unsigned char *bytes);
+unsigned char convertBytes2UInt8(unsigned char *bytes);
 unsigned short convertBytes2UInt16(unsigned char *bytes);
-unsigned int   convertBytes2UInt32(unsigned char *bytes);
+unsigned int convertBytes2UInt32(unsigned char *bytes);
 
 /* CONVERSION NUM -> BYTES */
-void           convertFloat(float f, unsigned char *bytes);
-void           convertInt8(char c, unsigned char *bytes);
-void           convertInt16(short s, unsigned char *bytes);
-void           convertInt32(int i, unsigned char *bytes);
-void           convertUInt8(unsigned char c, unsigned char *bytes);
-void           convertUInt16(unsigned short s, unsigned char *bytes);
-void           convertUInt32(unsigned int i, unsigned char *bytes);
+void convertFloat(float f, unsigned char *bytes);
+void convertInt8(char c, unsigned char *bytes);
+void convertInt16(short s, unsigned char *bytes);
+void convertInt32(int i, unsigned char *bytes);
+void convertUInt8(unsigned char c, unsigned char *bytes);
+void convertUInt16(unsigned short s, unsigned char *bytes);
+void convertUInt32(unsigned int i, unsigned char *bytes);
 
 #ifdef __cplusplus
 }

@@ -345,7 +345,7 @@ int amtecSendCommand(amtec_powercube_device_p dev, int id, unsigned char *cmd, i
   add = 0;
   lmnr = id & 7;
   lmnr = lmnr << 5;
-  umnr = id >> 3;
+  umnr = id > > 3;
   umnr = umnr | 4;
   for (i = 0; i < len; i++) {
     if ((cmd[i] == 0x02) || (cmd[i] == 0x03) || (cmd[i] == 0x10)) {
@@ -380,7 +380,7 @@ int amtecSendCommand(amtec_powercube_device_p dev, int id, unsigned char *cmd, i
   for (i = 0; i < len; i++) {
     bcc += cmd[i];
   }
-  bcc = bcc + (bcc >> 8);
+  bcc = bcc + (bcc > > 8);
   switch (bcc) {
   case 0x02:
     rcmd[ctr++] = 0x10;
